@@ -1,0 +1,17 @@
+{
+	"cues": [
+		{
+			"cue_number": 1,
+			"category": "AMB",
+			"title": "rainy city street at night with distant traffic",
+			"start_time": 3.2,
+			"duration": 30
+		},
+		{
+			"cue_number": 2,
+			"category": "BGMSTOP",
+			"title": "BGMSTOP marker before tonal shift",
+			"start_time": 33.0
+		}
+	]
+}

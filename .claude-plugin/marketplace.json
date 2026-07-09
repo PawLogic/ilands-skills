@@ -1,0 +1,21 @@
+{
+  "name": "ilands-skills",
+  "owner": { "name": "PawLogic", "url": "https://ilands.ai" },
+  "description": "iLands creation & platform skills for coding agents (Claude Code, Codex, Cursor, pi, OpenClaw, Hermes). Skills call the `dl` CLI, which proxies media generation and iLands platform APIs billed to your iLands wallet — no vendor API keys on your machine.",
+  "plugins": [
+    {
+      "name": "dl",
+      "source": "./plugins/dl",
+      "description": "Creation skills — image / video / music / TTS / lipsync / audio / research / stock media. Calls the `dl` CLI (npm i -g @pawlogic/dl && dl login). Any logged-in iLands user can use these.",
+      "version": "0.1.0",
+      "author": { "name": "PawLogic" }
+    },
+    {
+      "name": "ilands",
+      "source": "./plugins/ilands",
+      "description": "iLands platform skills — publish content, bounties, social interaction, service listings, audience analysis. Anyone can install; access is gated server-side by your iLands account role.",
+      "version": "0.1.0",
+      "author": { "name": "PawLogic" }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "AudioDesignResult",
+	"description": "Final mixed video with audio-design applied. Pure domain data; flat shape so the frontend renders a single-video player with metadata.",
+	"type": "object",
+	"additionalProperties": true,
+	"required": ["video_url"],
+	"properties": {
+		"title": { "type": "string" },
+		"description": {
+			"type": "string",
+			"description": "One-liner summary, e.g. '12 cues · 2m 04s · video mode · ok'."
+		},
+		"thumbnail_url": { "type": "string" },
+		"video_url": {
+			"type": "string",
+			"minLength": 1,
+			"description": "Final mp4 with audio-design applied (master mixed in, original video stream copied)."
+		},
+		"master_audio_url": {
+			"type": "string",
+			"description": "Standalone mixed audio track (mp3 / wav). Optional."
+		},
+		"duration": {
+			"type": "number",
+			"minimum": 0,
+			"description": "Total duration in seconds (matches input video)."
+		},
+		"quality_tier": {
+			"type": "string",
+			"enum": ["ok", "degraded"],
+			"description": "Renders as a badge chip."
+		},
+		"cue_counts": {
+			"type": "object",
+			"additionalProperties": { "type": "integer" },
+			"description": "Per-category cue count, e.g. {AMB: 3, BGM: 2, SFX: 5, STINGER: 1}."
+		},
+		"failed_cues": {
+			"type": "array",
+			"items": { "type": "string" },
+			"description": "IDs of cues that could not be rendered; surface for follow-up."
+		},
+		"cue_corrections": {
+			"type": "array",
+			"items": { "type": "object", "additionalProperties": true },
+			"description": "Per-cue corrections applied during mix (truncation, bed conflict resolution, etc.)."
+		},
+		"transcript_source": {
+			"type": "string",
+			"description": "Where the cue plan originated (transcript file id / Phase 02 artifact ref)."
+		}
+	}
+}

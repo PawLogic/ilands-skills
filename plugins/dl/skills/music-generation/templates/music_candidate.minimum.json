@@ -1,0 +1,22 @@
+{
+	"selected_candidate_index": 0,
+	"selected_audio_url": "https://storage.googleapis.com/.../track1.mp3",
+	"candidates": [
+		{
+			"title": "Song Title",
+			"audio_url": "https://storage.googleapis.com/.../track1.mp3",
+			"duration": 214,
+			"lyrics": "[Verse]\nlyrics here...",
+			"tags": ["pop", "electronic"],
+			"description": "suno-v5_5 · candidate 1 of 2"
+		},
+		{
+			"title": "Song Title (Alt)",
+			"audio_url": "https://storage.googleapis.com/.../track2.mp3",
+			"duration": 218,
+			"lyrics": "[Verse]\nlyrics here...",
+			"tags": ["pop", "electronic"],
+			"description": "suno-v5_5 · candidate 2 of 2"
+		}
+	]
+}

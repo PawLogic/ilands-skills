@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ArtifactContract",
+  "description": "Artifact contract for create-subtitles atomic skill.",
+  "skill": "create-subtitles",
+  "slots": {
+    "subtitle_result": {
+      "display_name": "Subtitle Result",
+      "content_type": "application/json",
+      "schema_ref": "schemas/subtitle_result.schema.json",
+      "schema_version": "1.0",
+      "produced_in": "create-subtitles",
+      "consumed_by": [],
+      "promotable": true,
+      "allowed_producers": ["create-subtitles"],
+      "invariants": [
+        {
+          "id": "subtitle.has_source",
+          "description": "A source media URL is required.",
+          "check_type": "rule",
+          "check_config": {
+            "field": "source_url",
+            "required": true
+          }
+        },
+        {
+          "id": "subtitle.has_srt",
+          "description": "SRT content must be preserved even when rendering fails.",
+          "check_type": "rule",
+          "check_config": {
+            "field": "srt_content",
+            "required": true
+          }
+        }
+      ],
+      "tags": ["subtitle", "media"],
+      "verification": {
+        "mode": "verify_and_promote",
+        "required_fields": ["source_url", "delivery", "srt_content", "render"]
+      }
+    }
+  },
+  "completion": {
+    "required_slots": ["subtitle_result"],
+    "terminal_slots": ["subtitle_result"],
+    "done_when": ["slot_promoted(subtitle_result)"]
+  },
+  "failure_policy": {
+    "ladder": ["retry", "degrade", "partial_finalize", "emit_failure_metadata"],
+    "minimum_viable_deliverable": "subtitle_result",
+    "partial_success_rules": [
+      "ASR success with SRT but caption render failure is still a partial success",
+      "render failure must preserve srt_content and failure metadata"
+    ]
+  }
+}

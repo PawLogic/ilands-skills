@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Transcript",
+  "$comment": "Internal bookkeeping slot (user_visible: false in artifact_contract.json). Holds the ASR-derived dialogue segments consumed only by Phase 03 sound designer. Plain domain-shaped JSON — NOT subject to the user-visible artifact protocol.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["segments", "source"],
+  "properties": {
+    "segments": {
+      "type": "array",
+      "description": "Time-ordered dialogue segments. May be empty when input has no speech (music / noise).",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["start", "end", "text"],
+        "properties": {
+          "id": { "type": "integer" },
+          "start": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Segment start in float seconds, time-origin = media start (= 0)."
+          },
+          "end": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Segment end in float seconds."
+          },
+          "text": {
+            "type": "string",
+            "description": "Transcribed text content for this segment."
+          }
+        }
+      }
+    },
+    "language": {
+      "type": "string",
+      "description": "Detected or specified language code (e.g. 'en', 'zh')."
+    },
+    "source": {
+      "type": "string",
+      "enum": ["dl_transcribe", "artifact_reuse", "user_provided"],
+      "description": "Provenance of this transcript. Phase 07 records this in audio_design_result for audit."
+    },
+    "source_slot": {
+      "type": "string",
+      "description": "When source=artifact_reuse, the upstream slot name we copied from."
+    }
+  }
+}

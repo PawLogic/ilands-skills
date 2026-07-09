@@ -1,0 +1,165 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "AddAudioCuesArtifactContract",
+	"description": "Artifact contract for the add-audio-cues atomic skill. Two internal bookkeeping slots (audio_design_input, transcript) carry intake/ASR data; three user-visible slots (audio_cues_plan, audio_retrieval_manifest, audio_design_result) hold the design + final deliverable. All slots follow the new artifact protocol — pure domain data, no UI fields.",
+	"skill": "add-audio-cues",
+	"slots": {
+		"audio_design_input": {
+			"display_name": "Audio Design Input",
+			"content_type": "application/json",
+			"schema_ref": "schemas/audio_design_input.schema.json",
+			"schema_version": "1.0",
+			"produced_in": "Phase 01",
+			"consumed_by": ["Phase 02", "Phase 03", "Phase 04", "Phase 05", "Phase 06", "Phase 07"],
+			"promotable": false,
+			"user_visible": false,
+			"allowed_producers": ["add-audio-cues"],
+			"input_fence": {},
+			"invariants": [
+				{
+					"id": "input.has_media_url",
+					"description": "Source media URL is required.",
+					"check_type": "rule",
+					"check_config": { "field": "media_url", "required": true, "min_length": 1 }
+				},
+				{
+					"id": "input.has_media_kind",
+					"description": "media_kind must be specified.",
+					"check_type": "rule",
+					"check_config": { "field": "media_kind", "required": true }
+				}
+			],
+			"tags": ["internal", "bookkeeping", "input"],
+			"verification": {
+				"mode": "verify",
+				"required_fields": ["media_url", "media_kind"]
+			}
+		},
+		"transcript": {
+			"display_name": "Transcript Segments",
+			"content_type": "application/json",
+			"schema_ref": "schemas/transcript.schema.json",
+			"schema_version": "1.0",
+			"produced_in": "Phase 02",
+			"consumed_by": ["Phase 03"],
+			"promotable": false,
+			"user_visible": false,
+			"allowed_producers": ["add-audio-cues", "audio-transcription", "*"],
+			"input_fence": { "audio_design_input": 1 },
+			"invariants": [
+				{
+					"id": "transcript.has_segments",
+					"description": "segments array must be present (may be empty for music/noise input).",
+					"check_type": "rule",
+					"check_config": { "field": "segments", "required": true }
+				}
+			],
+			"tags": ["internal", "bookkeeping", "asr"],
+			"verification": {
+				"mode": "verify",
+				"required_fields": ["segments", "source"]
+			}
+		},
+		"audio_cues_plan": {
+			"display_name": "Audio Cues Plan",
+			"content_type": "application/json",
+			"schema_ref": "schemas/audio_cues_plan.schema.json",
+			"schema_version": "2.0",
+			"produced_in": "Phase 03",
+			"consumed_by": ["Phase 04", "Phase 05"],
+			"promotable": false,
+			"user_visible": true,
+			"allowed_producers": ["add-audio-cues"],
+			"input_fence": { "transcript": 1 },
+			"invariants": [
+				{
+					"id": "cues.array_present",
+					"description": "cues array must be non-empty.",
+					"check_type": "rule",
+					"check_config": { "field": "cues", "min_length": 1 }
+				}
+			],
+			"tags": ["user-visible", "checkpoint", "design"],
+			"verification": {
+				"mode": "verify",
+				"required_fields": ["cues"]
+			}
+		},
+		"audio_retrieval_manifest": {
+			"display_name": "Audio Retrieval Manifest",
+			"content_type": "application/json",
+			"schema_ref": "schemas/audio_retrieval_manifest.schema.json",
+			"schema_version": "2.0",
+			"produced_in": "Phase 05",
+			"consumed_by": ["Phase 05", "Phase 07"],
+			"promotable": false,
+			"user_visible": true,
+			"allowed_producers": ["add-audio-cues"],
+			"input_fence": { "audio_cues_plan": 1 },
+			"invariants": [
+				{
+					"id": "manifest.array_present",
+					"description": "cues array must be non-empty (at least one prepared cue).",
+					"check_type": "rule",
+					"check_config": { "field": "cues", "min_length": 1 }
+				}
+			],
+			"tags": ["user-visible", "debug", "retrieval"],
+			"verification": {
+				"mode": "verify",
+				"required_fields": ["cues"]
+			}
+		},
+		"audio_design_result": {
+			"display_name": "Audio Design Result",
+			"content_type": "application/json",
+			"schema_ref": "schemas/audio_design_result.schema.json",
+			"schema_version": "2.0",
+			"produced_in": "Phase 07",
+			"consumed_by": [],
+			"promotable": true,
+			"user_visible": true,
+			"allowed_producers": ["add-audio-cues"],
+			"input_fence": { "audio_retrieval_manifest": 1 },
+			"invariants": [
+				{
+					"id": "result.has_video",
+					"description": "Final video_url must be present.",
+					"check_type": "rule",
+					"check_config": { "field": "video_url", "required": true, "min_length": 1 }
+				}
+			],
+			"tags": ["user-visible", "audio-design", "terminal"],
+			"verification": {
+				"mode": "verify_and_promote",
+				"required_fields": ["video_url"]
+			}
+		}
+	},
+	"completion": {
+		"required_slots": [
+			"audio_design_input",
+			"transcript",
+			"audio_cues_plan",
+			"audio_retrieval_manifest",
+			"audio_design_result"
+		],
+		"terminal_slots": ["audio_design_result"],
+		"done_when": [
+			"slot_verified(audio_design_input)",
+			"slot_verified(transcript)",
+			"slot_verified(audio_cues_plan)",
+			"slot_verified(audio_retrieval_manifest)",
+			"slot_promoted(audio_design_result)"
+		]
+	},
+	"failure_policy": {
+		"ladder": ["retry", "alternate", "degrade", "partial_finalize", "emit_failure_metadata"],
+		"minimum_viable_deliverable": "audio_design_result",
+		"partial_success_rules": [
+			"Individual SFX or STINGER cue retrieval misses may be dropped to failed_cues[] without blocking terminal promotion.",
+			"Sidechain ducking may be replaced by static volume scaling when audible artifacts appear; mark quality_tier=degraded.",
+			"When >50% cues are dropped, the master may still be promoted with quality_tier=degraded; the user must ack in Phase 07."
+		]
+	}
+}

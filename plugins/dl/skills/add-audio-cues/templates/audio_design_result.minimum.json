@@ -1,0 +1,13 @@
+{
+	"title": "Sound-designed cut (final)",
+	"description": "12 cues · 2m 04s · ok",
+	"thumbnail_url": "https://cdn.example.com/final/thumb_final.jpg",
+	"video_url": "https://cdn.example.com/final/audio_design_final.mp4",
+	"master_audio_url": "https://cdn.example.com/master/master.mp3",
+	"duration": 124.0,
+	"quality_tier": "ok",
+	"cue_counts": { "AMB": 3, "BGM": 2, "SFX": 5, "STINGER": 1 },
+	"failed_cues": [],
+	"cue_corrections": [],
+	"transcript_source": "dl_transcribe"
+}

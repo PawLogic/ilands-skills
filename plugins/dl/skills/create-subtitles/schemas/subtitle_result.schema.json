@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SubtitleResult",
+  "description": "Normalized subtitle creation result, including ASR output, SRT content, caption style, and optional burned-video output.",
+  "type": "object",
+  "required": [
+    "artifact_type",
+    "source_url",
+    "delivery",
+    "srt_content",
+    "srt_validation",
+    "render",
+    "created_at"
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "subtitle_result"
+    },
+    "source_url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": ["audio", "video", "unknown"]
+    },
+    "delivery": {
+      "type": "string",
+      "enum": ["srt_only", "burned_video", "partial"]
+    },
+    "language": {
+      "type": ["string", "null"]
+    },
+    "transcription": {
+      "type": ["object", "null"],
+      "required": ["success"],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "text": {
+          "type": ["string", "null"]
+        },
+        "language": {
+          "type": ["string", "null"]
+        },
+        "duration": {
+          "type": ["number", "null"]
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["start", "end", "text"],
+            "properties": {
+              "id": {
+                "type": ["integer", "null"]
+              },
+              "start": {
+                "type": "number",
+                "minimum": 0
+              },
+              "end": {
+                "type": "number",
+                "minimum": 0
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["word", "start", "end"],
+            "properties": {
+              "word": {
+                "type": "string"
+              },
+              "start": {
+                "type": "number",
+                "minimum": 0
+              },
+              "end": {
+                "type": "number",
+                "minimum": 0
+              },
+              "probability": {
+                "type": ["number", "null"]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "error": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "srt_content": {
+      "type": "string"
+    },
+    "subtitle_mode": {
+      "type": "string",
+      "enum": ["standard", "word_by_word"]
+    },
+    "srt_source": {
+      "type": "string",
+      "enum": ["asr_segments", "user_supplied", "corrected"]
+    },
+    "srt_validation": {
+      "type": "object",
+      "required": [
+        "valid",
+        "cue_count",
+        "overlap_count",
+        "skipped_count",
+        "warnings",
+        "strategy"
+      ],
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "cue_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "overlap_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "strategy": {
+          "type": "string",
+          "enum": ["none", "shift_start_to_previous_end_plus_1ms"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "caption": {
+      "type": ["object", "null"],
+      "properties": {
+        "style_id": {
+          "type": "string"
+        },
+        "fill_color": {
+          "type": "string"
+        },
+        "border_color": {
+          "type": "string"
+        },
+        "font_id": {
+          "type": "string"
+        },
+        "font_weight": {
+          "type": "string",
+          "enum": ["normal", "bold"]
+        },
+        "shadow": {
+          "type": ["object", "null"],
+          "properties": {
+            "color": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "position": {
+          "type": "string",
+          "enum": ["top", "bottom"]
+        },
+        "position_value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.5
+        },
+        "font_size": {
+          "type": "string",
+          "enum": ["sm", "md", "lg"]
+        },
+        "font_size_px": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 72
+        }
+      },
+      "additionalProperties": false
+    },
+    "render": {
+      "type": "object",
+      "required": ["requested", "success"],
+      "properties": {
+        "requested": {
+          "type": "boolean"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "video_url": {
+          "type": ["string", "null"]
+        },
+        "failure_step": {
+          "type": ["string", "null"],
+          "enum": ["download", "srt_parse", "ass", "ffmpeg", "upload", "unknown", null]
+        },
+        "error": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "task_id": {
+      "type": ["string", "null"]
+    },
+    "created_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

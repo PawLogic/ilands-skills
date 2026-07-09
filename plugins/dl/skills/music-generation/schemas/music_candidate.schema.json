@@ -1,0 +1,53 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "MusicCandidate",
+	"description": "Music generation results — array of candidate tracks. User selects one; the choice is recorded at top level. Pure domain data; frontend auto-renders a candidate grid with audio players.",
+	"type": "object",
+	"additionalProperties": true,
+	"required": ["candidates"],
+	"properties": {
+		"selected_candidate_index": {
+			"type": ["integer", "null"],
+			"minimum": 0,
+			"description": "Index into `candidates` of the chosen track; null until the user picks one."
+		},
+		"selected_audio_url": {
+			"type": ["string", "null"],
+			"description": "Canonical downstream `music_url`, copied from `candidates[selected_candidate_index].audio_url`. null until selection is final."
+		},
+		"candidates": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"required": ["title", "audio_url"],
+				"properties": {
+					"title": { "type": "string", "minLength": 1 },
+					"audio_url": {
+						"type": "string",
+						"minLength": 1,
+						"description": "Vendor-hosted or GCS-mirrored audio. `.mp3` / `.wav` triggers the auto audio player."
+					},
+					"cover_url": {
+						"type": "string",
+						"description": "Optional cover art. `.jpg` / `.png` etc. triggers the auto cover image."
+					},
+					"duration": {
+						"type": "number",
+						"minimum": 0
+					},
+					"lyrics": { "type": "string" },
+					"tags": {
+						"type": "array",
+						"items": { "type": "string" }
+					},
+					"description": {
+						"type": "string",
+						"description": "Optional short note (vendor name, evaluation summary, etc.). Keep brief."
+					}
+				}
+			}
+		}
+	}
+}

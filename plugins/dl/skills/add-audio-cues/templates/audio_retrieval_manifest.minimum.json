@@ -1,0 +1,17 @@
+{
+	"cues": [
+		{
+			"cue_number": 1,
+			"category": "AMB",
+			"title": "rainy city street at night with distant traffic",
+			"audio_url": "https://cdn.example.com/amb/ad042_rain_city.mp3",
+			"start_time": 3.2,
+			"target_duration": 30,
+			"actual_duration": 18.4,
+			"asset_id": "ad042",
+			"retrieval_score": 0.82,
+			"retrieval_status": "prepared",
+			"prepared_path": "/tmp/audio_sop_abc123/prepared_0.mp3"
+		}
+	]
+}

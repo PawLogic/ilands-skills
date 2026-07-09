@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AudioDesignInput",
+  "$comment": "Internal bookkeeping slot (user_visible: false in artifact_contract.json). Carries the user's intake parameters across all phases. Plain domain-shaped JSON — NOT subject to the user-visible artifact protocol (no slot/display_name/content_layout/content wrapper).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["media_url", "media_kind"],
+  "properties": {
+    "media_url": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Public URL of the source video. ffprobe / ffmpeg / dl transcribe all consume this directly."
+    },
+    "media_kind": {
+      "type": "string",
+      "enum": ["video"],
+      "description": "Always 'video' for this skill (audio-only inputs are out of scope per SKILL.md trigger patterns)."
+    },
+    "total_duration_sec": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Total source duration in float seconds, probed by ffprobe in Phase 01. May be null when first written, patched in after probe."
+    },
+    "language_hint": {
+      "type": "string",
+      "description": "ASR language hint: 'auto' (default), or ISO-639-1 code like 'en', 'zh', 'ja'."
+    },
+    "narrative_context": {
+      "type": "string",
+      "description": "Optional one-paragraph synopsis / setup helping the sound designer in Phase 03. May be empty."
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "ArtifactContract",
+	"description": "Artifact contract for the music-generation atomic skill. New artifact protocol — pure domain data, no UI fields.",
+	"skill": "music-generation",
+	"slots": {
+		"music_candidate": {
+			"display_name": "音乐候选",
+			"content_type": "application/json",
+			"schema_ref": "schemas/music_candidate.schema.json",
+			"schema_version": "3.0",
+			"produced_in": "Music Generation",
+			"consumed_by": [],
+			"promotable": false,
+			"allowed_producers": ["music-generation"],
+			"input_fence": {},
+			"invariants": [
+				{
+					"id": "music.has_candidates",
+					"description": "至少保留一个候选音乐结果",
+					"check_type": "rule",
+					"check_config": { "field": "candidates", "min_length": 1 }
+				},
+				{
+					"id": "music.selected_audio",
+					"description": "finalize 后必须有 selected_audio_url（user 选完才能 finalize verify）",
+					"check_type": "rule",
+					"check_config": { "field": "selected_audio_url", "required": true, "min_length": 1 }
+				}
+			],
+			"tags": ["music", "audio", "candidate"],
+			"verification": {
+				"mode": "verify",
+				"required_fields": ["candidates", "selected_candidate_index", "selected_audio_url"]
+			}
+		}
+	}
+}

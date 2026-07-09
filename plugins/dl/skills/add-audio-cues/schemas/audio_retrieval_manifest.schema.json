@@ -1,0 +1,72 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "AudioRetrievalManifest",
+	"description": "Per-cue retrieved audio assets aligned with audio_cues_plan. Pure domain data; frontend renders the array as an audio-cue list (each item has an audio_url so the user can audition).",
+	"type": "object",
+	"additionalProperties": true,
+	"required": ["cues"],
+	"properties": {
+		"cues": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"additionalProperties": true,
+				"required": ["cue_number", "category", "title", "audio_url"],
+				"properties": {
+					"cue_number": {
+						"type": "integer",
+						"minimum": 1,
+						"description": "Aligns with audio_cues_plan.cues[].cue_number."
+					},
+					"category": {
+						"type": "string",
+						"enum": ["AMB", "BGM", "SFX", "STINGER", "BGMSTOP"]
+					},
+					"title": {
+						"type": "string",
+						"minLength": 1,
+						"description": "Cue description (same text as audio_cues_plan.cues[].title) — what the asset is supposed to sound like."
+					},
+					"audio_url": {
+						"type": "string",
+						"minLength": 1,
+						"description": "CDN URL of the retrieved asset (auto audio player)."
+					},
+					"start_time": {
+						"type": "number",
+						"minimum": 0,
+						"description": "Seconds from video start (mirrors plan.start_time)."
+					},
+					"target_duration": {
+						"type": "number",
+						"minimum": 0,
+						"description": "Target length in seconds requested from the retrieval."
+					},
+					"actual_duration": {
+						"type": "number",
+						"minimum": 0,
+						"description": "Actual length of the retrieved asset."
+					},
+					"asset_id": {
+						"type": "string",
+						"description": "Knowledge-search asset id (e.g. 'ad042')."
+					},
+					"retrieval_score": {
+						"type": "number",
+						"description": "Match score from knowledge search (0-1)."
+					},
+					"retrieval_status": {
+						"type": "string",
+						"enum": ["prepared", "fallback", "failed"],
+						"description": "Outcome of the Phase 04a prep step. Renders as a badge chip."
+					},
+					"prepared_path": {
+						"type": "string",
+						"description": "Local prepared path (e.g. trimmed/resampled) for Phase 05 mix."
+					}
+				}
+			}
+		}
+	}
+}

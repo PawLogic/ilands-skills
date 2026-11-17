@@ -1,6 +1,6 @@
 ---
 name: image-generation
-description: "Generate or edit images via api-layer. Use `dl generate-image-prompt` for prompt-only images and `dl generate-image-ref` for any image grounded in source/reference URLs. Services: banana (Imagen3 series, general / text, up to 2K), banana-2 (Imagen4 4K, newer generation), seedream (Asian aesthetic / portraits), seedream-5-lte (next-gen), gpt-image-2 (OpenAI GPT-Image-2, highest text-in-image fidelity and multi-image edit). Use during reference-pack creation or any image-driven workflow when upstream artifacts must preserve the returned URLs in structures such as `reference_list.ref_img_urls` and `selected_url`."
+description: "Generate or edit images via api-layer. Use `dl generate-image-prompt` for prompt-only images and `dl generate-image-ref` for any image grounded in source/reference URLs. Services: banana-pro (general / text, up to 2K), seedream (Asian aesthetic / portraits), seedream-5-lte (next-gen), gpt-image-2 (OpenAI GPT-Image-2, highest text-in-image fidelity and multi-image edit). Use during reference-pack creation or any image-driven workflow when upstream artifacts must preserve the returned URLs in structures such as `reference_list.ref_img_urls` and `selected_url`."
 allowed-tools: Bash(dl generate-image-prompt:*) Bash(dl generate-image-ref:*)
 metadata:
   ilands:

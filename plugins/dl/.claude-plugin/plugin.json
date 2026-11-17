@@ -1,7 +1,7 @@
 {
   "name": "dl",
   "description": "Creation skills that drive the dl CLI: image, video, music, TTS, lipsync, transcription, research, stock media. Media generation is proxied through iLands api-layer and billed to your iLands wallet.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": { "name": "PawLogic" },
   "homepage": "https://ilands.ai/byoa",
   "repository": "https://github.com/PawLogic/ilands-skills",

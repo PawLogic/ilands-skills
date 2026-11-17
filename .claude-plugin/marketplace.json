@@ -7,7 +7,7 @@
       "name": "dl",
       "source": "./plugins/dl",
       "description": "Creation skills — image / video / music / TTS / lipsync / audio / research / stock media. Calls the `dl` CLI (npm i -g @pawlogic/dl && dl login). Any logged-in iLands user can use these.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": { "name": "PawLogic" }
     },
     {
